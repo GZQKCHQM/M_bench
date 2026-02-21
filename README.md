@@ -1,174 +1,404 @@
-# m_mac_chip
+# 🍎 m-bench
 
-Apple Silicon (Mシリーズ) 向けに、Python中心の計算ワークロードを定量評価するためのベンチマーク/レポート生成プロジェクトです。  
-単純なベンチマーク結果の羅列ではなく、機種をまたいで比較しやすい共通指標を出力します。
+> Know your Apple Silicon's true capabilities — measured, not guessed.
 
-## このプロジェクトで分かること
+A benchmark suite tailored for Python/NumPy workloads, automatically generating **cross-machine comparable metrics** across the M-series lineup.  
+"How many threads is optimal?" "Memory-bound or compute-bound?" — answered with real numbers.
 
-1. CPU並列の実効上限  
-`cpu_scaling` から、`workers` ごとの `throughput/speedup/efficiency` を取得できます。  
-「何並列までは素直に伸びるか」「どこから効率が落ちるか」を判断できます。
+---
 
-2. BLASスレッドの実用最適点  
-`matmul` で行列サイズ別に `threads` と `GFLOPS` の関係を測定します。  
-`VECLIB_MAXIMUM_THREADS` の初期値を決める根拠になります。
+## Motivation
 
-3. メモリ律速の判定と並列数の目安  
-`stream_single` と `stream_scaling` から、帯域ピークと飽和ワーカー数を算出します。  
-メモリ帯域が支配的な処理で、プロセスを増やしすぎる損失を避けられます。
+Apple Silicon has a unique core architecture where conventional tuning wisdom doesn't always apply.  
+The asymmetry between P-cores and E-cores, and the interference between BLAS threads and multiprocessing, can't be accurately understood without actual measurement.
 
-4. 長時間運用時の安定性  
-`matmul_sustained` で連続実行中の性能ドリフトを測定します。  
-短時間ベンチだけでは見えない、実運用時の安定性を確認できます。
+This project exists to help you **stop guessing thread counts** and start deriving optimal settings from real hardware data.
 
-5. 複数ジョブ同時実行時の最適構成  
-`hybrid_matmul` で `processes x BLAS threads` を探索します。  
-thread-only / process-only との性能差を定量化して、同時実行設定の最適化に使えます。
+---
 
-## こんな人に役立ちます（具体）
+## What You'll Learn
 
-- Pythonでシミュレーションを実装している開発者  
-  NumPy計算の並列設定を、推測ではなく実測で決められます。
+| Benchmark | Metrics | Use Case |
+|---|---|---|
+| `cpu_scaling` | Throughput / Speedup / Parallel efficiency | How far does scaling actually remain linear? |
+| `matmul` | BLAS threads × matrix size → GFLOPS | Choosing the right `VECLIB_MAXIMUM_THREADS` |
+| `stream_scaling` | Peak bandwidth / Saturation worker count | Upper limit on processes for memory-bound tasks |
+| `matmul_sustained` | Performance drift over long runs | Stability validation for production workloads |
+| `hybrid_matmul` | Full sweep of `processes × threads` | Optimal config for concurrent job execution |
 
-- Intel環境からMシリーズへの移行を検討している人  
-  CPU律速かメモリ律速かを切り分けて、移行効果の見積もり精度を上げられます。
+---
 
-- 複数の計算ジョブを同時に回す運用をしている人  
-  `processes x threads` の最適点を見つけ、処理待ち時間を短縮できます。
+## Benchmark Highlights (M1 Pro / 16GB)
 
-- 研究室/チームで機材比較を継続したい人  
-  同じ指標で世代比較でき、更新判断を毎回同じ基準で行えます。
+```
+Target: Apple M1 Pro (6P+2E), Python 3.13.12, NumPy 2.4.2
 
-## 直近の実測ハイライト（このリポジトリの最新結果）
+CPU
+  P-cores:              Strong linear scaling up to 6 workers
+  Gain at 8 workers:    +14.31%
+  E/P core ratio:       42.94%
 
-対象: Apple M1 Pro (6P+2E, 16GB), Python 3.13.12, NumPy 2.4.2
+Memory
+  Peak bandwidth:       63.63 GB/s
+  95% saturation at:    3 workers
 
-- CPUスカラー処理は6ワーカーまで高い線形性、8ワーカー時の上積みは `+14.31%`
-- Eコア寄与はPコア比 `42.94%`（単コア寄与ベース）
-- メモリ帯域ピーク `63.63 GB/s`、95%飽和は `3` ワーカー付近
-- DGEMM (N=3072) は `2` スレッドでほぼ飽和
-- 持続性能ドリフトは `0.844%`
-- ハイブリッド並列の最速は `3 x 2`（processes x threads）
-- thread-only (`1 x 8`) は最適構成比 `-20.46%`
-- process-only (`8 x 1`) は最適構成比 `-11.69%`
+BLAS
+  DGEMM (N=3072):       Nearly saturated at 2 threads
 
-詳細レポート: `reports/m1_pro_reverse_engineering_report.md`
+Stability
+  Sustained drift:      0.844%
+
+Hybrid Parallelism
+  Best config:          3 × 2  (processes × threads)
+  thread-only (1×8):    −20.46% vs. best
+  process-only (8×1):   −11.69% vs. best
+```
+
+Full report → [`reports/m1_pro_reverse_engineering_report.md`](reports/m1_pro_reverse_engineering_report.md)
+
+---
+
+## Who This Is For
+
+- **Developers running Python simulations with NumPy**  
+  Replace gut-feel thread settings with evidence-based tuning.
+
+- **Engineers migrating from Intel to Apple Silicon**  
+  Quantify whether your workload is CPU-bound or memory-bound to accurately estimate migration gains.
+
+- **Anyone running multiple compute jobs concurrently**  
+  Find the `processes × threads` sweet spot to maximize overall throughput.
+
+- **Labs or teams doing ongoing hardware comparisons**  
+  Use the same metrics across generations to make consistent, data-driven upgrade decisions.
+
+---
+
+## Repository Structure
+
+```
+m_mac_chip/
+├── scripts/
+│   ├── m_series_probe.py          # Core benchmark runner
+│   └── render_m_series_report.py  # JSON → Markdown report generator
+├── results/
+│   ├── m_series_probe_full.json   # Full measurement output (machine-readable)
+│   └── m_series_probe_quick.json  # Quick measurement output
+└── reports/
+    └── m1_pro_reverse_engineering_report.md
+```
+
+---
+
+## Setup
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip setuptools wheel
+pip install numpy psutil
+```
+
+**Requirements:** macOS (Apple Silicon) / Python 3.10+
+
+---
+
+## Usage
+
+### Full Benchmark
+
+```bash
+source .venv/bin/activate
+python scripts/m_series_probe.py --public --output results/m_series_probe_full.json
+```
+
+### Generate Report
+
+```bash
+python scripts/render_m_series_report.py \
+  --input  results/m_series_probe_full.json \
+  --public \
+  --output reports/m1_pro_reverse_engineering_report.md
+```
+
+### Quick Run (Sanity Check)
+
+```bash
+python scripts/m_series_probe.py --quick --public --output results/m_series_probe_quick.json
+```
+
+---
+
+## Comparing Across Machines
+
+Run the same scripts on any M-series machine and line up the numbers.
+
+```bash
+# Run on the target machine
+python scripts/m_series_probe.py --public --output results/m_series_probe_m3max.json
+python scripts/render_m_series_report.py --input results/m_series_probe_m3max.json \
+  --public --output reports/m3max_report.md
+```
+
+**Key metrics to compare:**
+
+| Metric | Description |
+|---|---|
+| `CPU P-core unit` | Baseline throughput of the P-core cluster |
+| `E/P ratio` | Single-core contribution ratio: E-core vs. P-core |
+| `Memory peak BW` | Peak memory bandwidth |
+| `Memory saturation worker` | Minimum workers to reach 95% of peak bandwidth |
+| `Roofline knee (FLOP/byte)` | Boundary between compute-bound and memory-bound regimes |
+| `Sustained drift` | Performance variation over extended runs |
+| `Hybrid best (proc × thread)` | Fastest config for concurrent workloads |
+
+**Speed ratio approximations:**
+
+```
+Memory-bound workloads: speedup ≈ target_peak_bw / current_peak_bw
+CPU-bound workloads:    speedup ≈ target_p_core_unit / current_p_core_unit
+Mixed workloads:        speedup ≈ min(the two limits above)
+```
+
+---
+
+## Practical Tuning Starting Points
+
+Use your measurement results to tune in this order:
+
+1. **Start BLAS thread exploration at `2`** — this is optimal or near-optimal in most cases
+2. **For memory-bound workloads, begin adjusting around `workers ≈ 3`**
+3. **For concurrent independent jobs, try `3 × 2` as your first candidate**
+4. **Avoid locking into thread-only mode — always explore `processes × threads`**
+
+---
+
+## Reproducibility Checklist
+
+- Run on AC power
+- Minimize background processes
+- Use the same Python / NumPy versions across machines
+- Don't mix `--quick` and `full` results
+
+---
+
+## Limitations & Out of Scope
+
+- Not designed for CUDA-based workload comparisons
+- PyTorch / JAX-specific optimizations are not measured
+- Absolute performance is affected by OS state, thermals, and concurrent load
+
+---
+
+## License
+
+MIT
+
+---
+
+*If you have results from your own M-series machine, feel free to share them via a PR or Issue — more data makes the comparisons richer.*
+
+
+
+# 🍎 m-bench
+
+> Apple Silicon の「実力」を、推測ではなく実測で知るためのベンチマークスイート。
+
+Python/NumPy ワークロードに特化し、M シリーズ間で横断比較できる **共通指標** を自動生成します。  
+「スレッド数いくつが最適？」「メモリ律速？CPU律速？」—— そういった疑問に、数字で答えます。
+
+---
+
+## なぜ作ったのか
+
+Apple Silicon はコア構成が独特で、一般的なチューニング知識がそのまま通用しないことがあります。  
+特に P コアと E コアの非対称性、BLAS スレッドと multiprocessing の干渉は、実測しなければ正確に把握できません。
+
+このプロジェクトは「感覚でスレッド数を決める」ことをやめ、**実機のデータから最適設定を導く** ためのツールです。
+
+---
+
+## 何がわかるか
+
+| 測定項目 | 指標 | 活用シーン |
+|---|---|---|
+| `cpu_scaling` | スループット / スピードアップ / 並列効率 | 「何並列まで素直に伸びるか」の判断 |
+| `matmul` | BLAS スレッド × 行列サイズ → GFLOPS | `VECLIB_MAXIMUM_THREADS` の初期値決定 |
+| `stream_scaling` | 帯域ピーク / 飽和ワーカー数 | メモリ律速処理でのプロセス数上限 |
+| `matmul_sustained` | 長時間実行中の性能ドリフト | 本番運用時の安定性確認 |
+| `hybrid_matmul` | `processes × threads` の全探索 | 複数ジョブ同時実行の最適構成 |
+
+---
+
+## 実測ハイライト（M1 Pro / 16GB）
+
+```
+対象: Apple M1 Pro (6P+2E), Python 3.13.12, NumPy 2.4.2
+
+CPU
+  P コア群: 6 ワーカーまで高い線形スケーリング
+  8 ワーカー時の上積み: +14.31%
+  E/P コア寄与比: 42.94%
+
+メモリ
+  ピーク帯域:       63.63 GB/s
+  95% 飽和ワーカー: 3
+
+BLAS
+  DGEMM (N=3072): 2 スレッドでほぼ飽和
+
+安定性
+  持続性能ドリフト: 0.844%
+
+ハイブリッド並列
+  最速構成:           3 × 2  (processes × threads)
+  thread-only (1×8):  最適比 −20.46%
+  process-only (8×1): 最適比 −11.69%
+```
+
+詳細レポート → [`reports/m1_pro_reverse_engineering_report.md`](reports/m1_pro_reverse_engineering_report.md)
+
+---
+
+## こんな人に刺さります
+
+- **NumPy シミュレーションを書いている開発者**  
+  並列設定を推測から実測ベースに切り替えられます。
+
+- **Intel → Apple Silicon の移行を検討している人**  
+  CPU 律速 / メモリ律速を切り分けて、移行効果の見積もりを定量化できます。
+
+- **複数の計算ジョブを同時に走らせている人**  
+  `processes × threads` の最適点を見つけ、スループットを最大化できます。
+
+- **研究室・チームで機材を継続比較したい人**  
+  世代をまたいで同じ指標で比較できるため、更新判断の根拠になります。
+
+---
 
 ## リポジトリ構成
 
-```text
-scripts/
-  m_series_probe.py             # 実測ベンチマーク本体
-  render_m_series_report.py     # JSON結果からMarkdownを生成
-results/
-  m_series_probe_full.json      # フル計測結果
-  m_series_probe_quick.json     # 短縮計測結果
-reports/
-  m1_pro_reverse_engineering_report.md
+```
+m_mac_chip/
+├── scripts/
+│   ├── m_series_probe.py          # ベンチマーク本体
+│   └── render_m_series_report.py  # JSON → Markdown レポート生成
+├── results/
+│   ├── m_series_probe_full.json   # フル計測結果（機械処理向け）
+│   └── m_series_probe_quick.json  # 短縮計測結果
+└── reports/
+    └── m1_pro_reverse_engineering_report.md
 ```
 
-## 評価指標（Mシリーズ共通で比較可能）
-
-- `CPU P-core unit`  
-  Pコア群の基礎スループット比較指標
-- `E/P ratio`  
-  Eコア単コア寄与 / Pコア単コア寄与
-- `Memory saturation worker`  
-  メモリ帯域が95%ピークに達する最小ワーカー数
-- `Roofline knee (FLOP/byte)`  
-  計算律速と帯域律速の境界目安
-- `Sustained drift`  
-  長時間連続実行での性能変動率
-- `Hybrid best (proc x thread)`  
-  複数ジョブ同時実行時の最速構成
-
-## 必要環境
-
-- macOS (Apple Silicon)
-- Python 3.10+（本リポジトリの実測は 3.13.12）
-- `venv` が利用可能であること
+---
 
 ## セットアップ
 
 ```bash
 python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install -U pip setuptools wheel
-python -m pip install numpy psutil
+source .venv/bin/activate
+pip install -U pip setuptools wheel
+pip install numpy psutil
 ```
 
-## 実行方法
+**必要環境:** macOS (Apple Silicon) / Python 3.10+
 
-### 1. フル計測
+---
+
+## 使い方
+
+### フル計測
 
 ```bash
-. .venv/bin/activate
+source .venv/bin/activate
 python scripts/m_series_probe.py --public --output results/m_series_probe_full.json
 ```
 
-### 2. レポート生成
+### レポート生成
 
 ```bash
-. .venv/bin/activate
 python scripts/render_m_series_report.py \
-  --input results/m_series_probe_full.json \
+  --input  results/m_series_probe_full.json \
   --public \
   --output reports/m1_pro_reverse_engineering_report.md
 ```
 
-### 3. 短縮計測（動作確認向け）
+### 動作確認（短縮版）
 
 ```bash
-. .venv/bin/activate
 python scripts/m_series_probe.py --quick --public --output results/m_series_probe_quick.json
 ```
 
-## 出力ファイルの見方
+---
 
-- `results/m_series_probe_full.json`  
-  機械処理向けの生データ。CIでの比較や可視化に向いています。
-- `reports/m1_pro_reverse_engineering_report.md`  
-  人間向けの要約レポート。GitHub公開時の本文として使えます。
+## 機種間の比較方法
 
-## Pythonシミュレーションでの実務的な使い方
+別の M シリーズ機で同じスクリプトを実行し、以下の指標を並べるだけです。
 
-1. まず `BLAS threads = 2` から探索を開始する  
-2. メモリ律速系は `workers ≈ 3` 前後から調整する  
-3. 独立ジョブを複数同時実行する場合は `3 x 2` を第一候補にする  
-4. thread-only固定運用は避け、`processes x threads` を必ず探索する  
+```bash
+# 比較したい機種で実行
+python scripts/m_series_probe.py --public --output results/m_series_probe_m3max.json
+python scripts/render_m_series_report.py --input results/m_series_probe_m3max.json \
+  --public --output reports/m3max_report.md
+```
 
-## 他のMシリーズ機で比較する手順
+**比較する指標:**
 
-1. 比較したいMシリーズ機で、同じセットアップを実行する  
-2. 各マシンでフル計測を実行し、機種ごとに別名で保存する  
-`python scripts/m_series_probe.py --public --output results/m_series_probe_<machine>.json`
-3. 各計測結果からレポートを生成する  
-`python scripts/render_m_series_report.py --input results/m_series_probe_<machine>.json --public --output reports/<machine>_report.md`
-4. 次の項目を機種ごとに並べて比較する  
+| 指標 | 意味 |
+|---|---|
+| `CPU P-core unit` | P コア群の基礎スループット |
+| `E/P ratio` | E コアと P コアの単コア性能比 |
+| `Memory peak BW` | メモリ帯域ピーク |
+| `Memory saturation worker` | 帯域 95% に到達する最小ワーカー数 |
+| `Roofline knee (FLOP/byte)` | 計算律速と帯域律速の境界 |
+| `Sustained drift` | 長時間実行時の性能変動率 |
+| `Hybrid best (proc × thread)` | 同時実行時の最速構成 |
 
-- `CPU P-core unit`
-- `E/P ratio`
-- `Memory peak BW`
-- `Memory saturation worker`
-- `Roofline knee`
-- `Sustained drift`
-- `Hybrid best`
+**速度比の近似式:**
 
-初期見積もりの近似式:
+```
+メモリ律速処理: 速度比 ≈ target_peak_bw / current_peak_bw
+CPU 律速処理:  速度比 ≈ target_p_core_unit / current_p_core_unit
+混合処理:      速度比 ≈ min(上記 2 つの上限)
+```
 
-- メモリ律速処理の速度比 `~ (target_peak_bw / current_peak_bw)`
-- CPU律速処理の速度比 `~ (target_p_core_unit / current_p_core_unit)`
-- 混合処理の速度比 `~ min(上記2つの上限)`
+---
 
-## 再現性のためのチェックポイント
+## 実務チューニングの出発点
 
-- 電源接続状態を固定する（AC推奨）
-- バックグラウンド負荷を減らす
-- 同一Python/NumPyバージョンで比較する
-- 同一実行回数で比較する（`--quick` と `full` を混在させない）
+計測結果をもとに、以下の順序で設定を詰めることを推奨します。
 
-## 制約
+1. **BLAS スレッドは `2` から探索を始める**（大半のケースでこれが最適または近い）
+2. **メモリ律速系は `workers ≈ 3` 前後から調整する**
+3. **独立ジョブを並列実行する場合は `3 × 2` を第一候補にする**
+4. **thread-only 固定は避け、`processes × threads` を必ず探索する**
 
-- CUDA前提ワークロードの比較には向きません
-- 本測定はNumPy/Accelerate中心であり、PyTorch/JAX固有最適化は対象外です
-- 絶対性能はOS状態・温度・同時負荷の影響を受けます
+---
+
+## 計測の再現性を高めるために
+
+- AC 電源に接続した状態で計測する
+- バックグラウンドアプリを極力終了する
+- Python / NumPy のバージョンを機種間で揃える
+- `--quick` と `full` を混在させない
+
+---
+
+## 制約・スコープ外
+
+- CUDA ワークロードの比較には対応していません
+- PyTorch / JAX 固有の最適化は測定対象外です
+- 絶対性能は OS 状態・温度・同時負荷の影響を受けます
+
+---
+
+## ライセンス
+
+MIT
+
+---
+
+*同じ機種の結果をお持ちの方は、PR や Issue でシェアいただけると比較データが充実します。*
+
+
+
