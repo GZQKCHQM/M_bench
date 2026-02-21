@@ -1,0 +1,921 @@
+{
+  "system": {
+    "chip": "Apple M1 Pro",
+    "model": "redacted",
+    "os": "redacted",
+    "machine": "arm64",
+    "python": "3.13",
+    "timestamp_utc": "redacted",
+    "mem_bytes": 17179869184,
+    "mem_gb": 16.0,
+    "perf_cores": 6,
+    "eff_cores": 2,
+    "logical_cores": 8,
+    "l1d_perf_bytes": 131072,
+    "l1d_eff_bytes": 65536,
+    "l2_perf_bytes": 12582912,
+    "l2_eff_bytes": 4194304,
+    "cacheline_bytes": 128,
+    "mem_usable_bytes": null,
+    "numpy_version": "2.4.2"
+  },
+  "config": {
+    "quick": false,
+    "public": true,
+    "cpu_iters": 16000000,
+    "cpu_repeats": 3,
+    "matmul_sizes": [
+      1024,
+      2048,
+      3072
+    ],
+    "matmul_repeats": 5,
+    "sustained_size": 3072,
+    "sustained_iters": 320,
+    "sustained_window": 32,
+    "stream_n": 24000000,
+    "stream_repeats": 5,
+    "stream_mp_n": 2000000,
+    "stream_mp_loops": 14,
+    "stream_mp_repeats": 3,
+    "cache_min_pow": 15,
+    "cache_max_pow": 29,
+    "cache_target_bytes": 1073741824,
+    "cache_samples": 3,
+    "hybrid_matmul_config": {
+      "size": 1536,
+      "iters_per_process": 18,
+      "warmup": 1,
+      "repeats": 2,
+      "logical_cores": 8,
+      "process_candidates": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        8
+      ],
+      "thread_candidates": [
+        1,
+        2,
+        4,
+        6,
+        8
+      ],
+      "max_oversub_ratio": 2.0
+    }
+  },
+  "benchmarks": {
+    "cpu_scaling": [
+      {
+        "workers": 1,
+        "iters_per_worker": 16000000,
+        "median_seconds": 1.8815986659974442,
+        "throughput_iters_per_sec": 8503407.38922576,
+        "speedup_vs_1": 1.0,
+        "efficiency": 1.0
+      },
+      {
+        "workers": 2,
+        "iters_per_worker": 16000000,
+        "median_seconds": 1.8558485839967034,
+        "throughput_iters_per_sec": 17242786.009559948,
+        "speedup_vs_1": 2.027750197104212,
+        "efficiency": 1.013875098552106
+      },
+      {
+        "workers": 3,
+        "iters_per_worker": 16000000,
+        "median_seconds": 1.8864061659987783,
+        "throughput_iters_per_sec": 25445209.449146323,
+        "speedup_vs_1": 2.992354509721205,
+        "efficiency": 0.9974515032404017
+      },
+      {
+        "workers": 4,
+        "iters_per_worker": 16000000,
+        "median_seconds": 1.9396241669965093,
+        "throughput_iters_per_sec": 32996082.998441614,
+        "speedup_vs_1": 3.880336609563043,
+        "efficiency": 0.9700841523907607
+      },
+      {
+        "workers": 5,
+        "iters_per_worker": 16000000,
+        "median_seconds": 1.9637028750003083,
+        "throughput_iters_per_sec": 40739360.836342126,
+        "speedup_vs_1": 4.790945437703116,
+        "efficiency": 0.9581890875406233
+      },
+      {
+        "workers": 6,
+        "iters_per_worker": 16000000,
+        "median_seconds": 1.991445042003761,
+        "throughput_iters_per_sec": 48206201.01240971,
+        "speedup_vs_1": 5.6690452198596715,
+        "efficiency": 0.9448408699766119
+      },
+      {
+        "workers": 7,
+        "iters_per_worker": 16000000,
+        "median_seconds": 2.27488804099994,
+        "throughput_iters_per_sec": 49233192.13141134,
+        "speedup_vs_1": 5.789819289828714,
+        "efficiency": 0.827117041404102
+      },
+      {
+        "workers": 8,
+        "iters_per_worker": 16000000,
+        "median_seconds": 2.527315291001287,
+        "throughput_iters_per_sec": 50646629.0358605,
+        "speedup_vs_1": 5.9560393519464085,
+        "efficiency": 0.7445049189933011
+      }
+    ],
+    "matmul": [
+      {
+        "threads": 1,
+        "size": 1024,
+        "median_seconds": 0.007922500000859145,
+        "gflops": 271.06136292421826
+      },
+      {
+        "threads": 1,
+        "size": 2048,
+        "median_seconds": 0.07625104199541965,
+        "gflops": 225.30668085862987
+      },
+      {
+        "threads": 1,
+        "size": 3072,
+        "median_seconds": 0.23999629199533956,
+        "gflops": 241.59564305737663
+      },
+      {
+        "threads": 2,
+        "size": 1024,
+        "median_seconds": 0.004790541999682318,
+        "gflops": 448.2757166396639
+      },
+      {
+        "threads": 2,
+        "size": 2048,
+        "median_seconds": 0.04112133300077403,
+        "gflops": 417.7848316268498
+      },
+      {
+        "threads": 2,
+        "size": 3072,
+        "median_seconds": 0.12441350000153761,
+        "gflops": 466.043142386344
+      },
+      {
+        "threads": 4,
+        "size": 1024,
+        "median_seconds": 0.005419000000983942,
+        "gflops": 396.2878109632913
+      },
+      {
+        "threads": 4,
+        "size": 2048,
+        "median_seconds": 0.04084008299832931,
+        "gflops": 420.66195567484027
+      },
+      {
+        "threads": 4,
+        "size": 3072,
+        "median_seconds": 0.12363941699732095,
+        "gflops": 468.96095035175045
+      },
+      {
+        "threads": 6,
+        "size": 1024,
+        "median_seconds": 0.004397666001750622,
+        "gflops": 488.3234986797838
+      },
+      {
+        "threads": 6,
+        "size": 2048,
+        "median_seconds": 0.039464583998778835,
+        "gflops": 435.3237116228465
+      },
+      {
+        "threads": 6,
+        "size": 3072,
+        "median_seconds": 0.12568987499980722,
+        "gflops": 461.31049534490296
+      },
+      {
+        "threads": 8,
+        "size": 1024,
+        "median_seconds": 0.004718791002233047,
+        "gflops": 455.0919180323431
+      },
+      {
+        "threads": 8,
+        "size": 2048,
+        "median_seconds": 0.03986929199891165,
+        "gflops": 430.9047972175923
+      },
+      {
+        "threads": 8,
+        "size": 3072,
+        "median_seconds": 0.12465591700311052,
+        "gflops": 465.13683337272454
+      }
+    ],
+    "matmul_sustained": {
+      "threads": 8,
+      "size": 3072,
+      "iters": 320,
+      "window": 32,
+      "windows": 10,
+      "first_window_gflops": 467.97731899602326,
+      "last_window_gflops": 467.25363741815084,
+      "first_edge_gflops": 467.97731899602326,
+      "last_edge_gflops": 467.25363741815084,
+      "min_window_gflops": 465.7836496825563,
+      "max_window_gflops": 469.5169644951703,
+      "drift_pct": -0.15464031022378588,
+      "chunk_gflops": [
+        467.97731899602326,
+        468.29000356311786,
+        467.9681937670089,
+        468.71761713279545,
+        468.6946472080562,
+        468.8017014800572,
+        469.5169644951703,
+        467.95678392526867,
+        465.7836496825563,
+        467.25363741815084
+      ]
+    },
+    "hybrid_matmul": {
+      "config": {
+        "size": 1536,
+        "iters_per_process": 18,
+        "warmup": 1,
+        "repeats": 2,
+        "logical_cores": 8,
+        "process_candidates": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          8
+        ],
+        "thread_candidates": [
+          1,
+          2,
+          4,
+          6,
+          8
+        ],
+        "max_oversub_ratio": 2.0
+      },
+      "results": [
+        {
+          "processes": 1,
+          "threads": 1,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.125,
+          "throughput_gflops": 190.24340196417563,
+          "wall_seconds": 0.6863815000033355,
+          "worker_elapsed_seconds": 0.5204038960000616,
+          "throughput_samples_gflops": [
+            184.47815642221437,
+            196.00864750613692
+          ],
+          "checksum": -76.05068278071352
+        },
+        {
+          "processes": 1,
+          "threads": 2,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.25,
+          "throughput_gflops": 324.2809205236091,
+          "wall_seconds": 0.4023062919986842,
+          "worker_elapsed_seconds": 0.2711264999998093,
+          "throughput_samples_gflops": [
+            323.5722306883562,
+            324.98961035886197
+          ],
+          "checksum": -76.05068278071352
+        },
+        {
+          "processes": 1,
+          "threads": 4,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.5,
+          "throughput_gflops": 323.426252319553,
+          "wall_seconds": 0.40336791700246977,
+          "worker_elapsed_seconds": 0.27151497899831156,
+          "throughput_samples_gflops": [
+            323.76378255595097,
+            323.08872208315506
+          ],
+          "checksum": -76.05068278071352
+        },
+        {
+          "processes": 1,
+          "threads": 6,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.75,
+          "throughput_gflops": 323.57358286986744,
+          "wall_seconds": 0.40318537499479135,
+          "worker_elapsed_seconds": 0.27108854149628314,
+          "throughput_samples_gflops": [
+            322.93713259878064,
+            324.21003314095424
+          ],
+          "checksum": -76.05068278071352
+        },
+        {
+          "processes": 1,
+          "threads": 8,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 1.0,
+          "throughput_gflops": 321.27350960618344,
+          "wall_seconds": 0.40607245849605533,
+          "worker_elapsed_seconds": 0.27391933299441007,
+          "throughput_samples_gflops": [
+            320.533433457551,
+            322.0135857548159
+          ],
+          "checksum": -76.05068278071352
+        },
+        {
+          "processes": 2,
+          "threads": 1,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.25,
+          "throughput_gflops": 277.0579404449902,
+          "wall_seconds": 0.9420250205002958,
+          "worker_elapsed_seconds": 0.7810017082501872,
+          "throughput_samples_gflops": [
+            281.79349206956675,
+            272.3223888204137
+          ],
+          "checksum": 522.9129366262719
+        },
+        {
+          "processes": 2,
+          "threads": 2,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.5,
+          "throughput_gflops": 390.7692326034945,
+          "wall_seconds": 0.6677103125002759,
+          "worker_elapsed_seconds": 0.5069518852487818,
+          "throughput_samples_gflops": [
+            391.66895038033033,
+            389.8695148266587
+          ],
+          "checksum": 522.9129366262719
+        },
+        {
+          "processes": 2,
+          "threads": 4,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 1.0,
+          "throughput_gflops": 392.25636091447893,
+          "wall_seconds": 0.6651755834973301,
+          "worker_elapsed_seconds": 0.5115363855002215,
+          "throughput_samples_gflops": [
+            392.48740172924164,
+            392.02532009971617
+          ],
+          "checksum": 522.9129366262719
+        },
+        {
+          "processes": 2,
+          "threads": 6,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 1.5,
+          "throughput_gflops": 393.06944084097074,
+          "wall_seconds": 0.6638000630046008,
+          "worker_elapsed_seconds": 0.514688177001517,
+          "throughput_samples_gflops": [
+            392.6798183453534,
+            393.45906333658803
+          ],
+          "checksum": 522.9129366262719
+        },
+        {
+          "processes": 2,
+          "threads": 8,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 2.0,
+          "throughput_gflops": 389.7186291291466,
+          "wall_seconds": 0.6695079795026686,
+          "worker_elapsed_seconds": 0.5017440517513023,
+          "throughput_samples_gflops": [
+            389.1962817109966,
+            390.2409765472967
+          ],
+          "checksum": 522.9129366262719
+        },
+        {
+          "processes": 3,
+          "threads": 1,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.375,
+          "throughput_gflops": 348.1957470531887,
+          "wall_seconds": 1.1245249585008423,
+          "worker_elapsed_seconds": 0.9269287289971544,
+          "throughput_samples_gflops": [
+            355.5760866059792,
+            340.8154075003982
+          ],
+          "checksum": 533.3256885091166
+        },
+        {
+          "processes": 3,
+          "threads": 2,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.75,
+          "throughput_gflops": 406.54710207552694,
+          "wall_seconds": 0.9626902294985484,
+          "worker_elapsed_seconds": 0.7656300000016927,
+          "throughput_samples_gflops": [
+            406.4380686842099,
+            406.65613546684403
+          ],
+          "checksum": 533.3256885091166
+        },
+        {
+          "processes": 3,
+          "threads": 4,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 1.5,
+          "throughput_gflops": 404.2183836233694,
+          "wall_seconds": 0.9683081880029931,
+          "worker_elapsed_seconds": 0.7574424795020605,
+          "throughput_samples_gflops": [
+            400.73447516562277,
+            407.702292081116
+          ],
+          "checksum": 533.3256885091166
+        },
+        {
+          "processes": 4,
+          "threads": 1,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.5,
+          "throughput_gflops": 363.84458562973293,
+          "wall_seconds": 1.4346231045055902,
+          "worker_elapsed_seconds": 1.2072291144977498,
+          "throughput_samples_gflops": [
+            369.8313856192233,
+            357.8577856402425
+          ],
+          "checksum": 152.50097591132618
+        },
+        {
+          "processes": 4,
+          "threads": 2,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 1.0,
+          "throughput_gflops": 378.0237187953843,
+          "wall_seconds": 1.3807991454996227,
+          "worker_elapsed_seconds": 1.1520322187516285,
+          "throughput_samples_gflops": [
+            384.1323579567216,
+            371.91507963404706
+          ],
+          "checksum": 152.50097591132618
+        },
+        {
+          "processes": 4,
+          "threads": 4,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 2.0,
+          "throughput_gflops": 391.03767967271455,
+          "wall_seconds": 1.3345314790021803,
+          "worker_elapsed_seconds": 1.122839083251165,
+          "throughput_samples_gflops": [
+            393.03146945286846,
+            389.0438898925606
+          ],
+          "checksum": 152.50097591132618
+        },
+        {
+          "processes": 6,
+          "threads": 1,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.75,
+          "throughput_gflops": 330.7941793690311,
+          "wall_seconds": 2.366348083502089,
+          "worker_elapsed_seconds": 2.100454479248583,
+          "throughput_samples_gflops": [
+            332.3075043095568,
+            329.2808544285054
+          ],
+          "checksum": 1304.131125720538
+        },
+        {
+          "processes": 6,
+          "threads": 2,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 1.5,
+          "throughput_gflops": 358.91197044672845,
+          "wall_seconds": 2.181074833497405,
+          "worker_elapsed_seconds": 1.8984601559986913,
+          "throughput_samples_gflops": [
+            361.94969985089006,
+            355.87424104256684
+          ],
+          "checksum": 1304.131125720538
+        },
+        {
+          "processes": 8,
+          "threads": 1,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 1.0,
+          "throughput_gflops": 358.6623604281291,
+          "wall_seconds": 2.9104457505018217,
+          "worker_elapsed_seconds": 2.5668579582506936,
+          "throughput_samples_gflops": [
+            363.5048751871562,
+            353.819845669102
+          ],
+          "checksum": 2876.887004350721
+        },
+        {
+          "processes": 8,
+          "threads": 2,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 2.0,
+          "throughput_gflops": 355.12704618287717,
+          "wall_seconds": 2.938946833000955,
+          "worker_elapsed_seconds": 2.5831938122519205,
+          "throughput_samples_gflops": [
+            353.4798312956199,
+            356.7742610701344
+          ],
+          "checksum": 2876.887004350721
+        }
+      ],
+      "best": {
+        "processes": 3,
+        "threads": 2,
+        "size": 1536,
+        "iters_per_process": 18,
+        "oversub_ratio": 0.75,
+        "throughput_gflops": 406.54710207552694,
+        "wall_seconds": 0.9626902294985484,
+        "worker_elapsed_seconds": 0.7656300000016927,
+        "throughput_samples_gflops": [
+          406.4380686842099,
+          406.65613546684403
+        ],
+        "checksum": 533.3256885091166
+      },
+      "best_no_oversub": {
+        "processes": 3,
+        "threads": 2,
+        "size": 1536,
+        "iters_per_process": 18,
+        "oversub_ratio": 0.75,
+        "throughput_gflops": 406.54710207552694,
+        "wall_seconds": 0.9626902294985484,
+        "worker_elapsed_seconds": 0.7656300000016927,
+        "throughput_samples_gflops": [
+          406.4380686842099,
+          406.65613546684403
+        ],
+        "checksum": 533.3256885091166
+      },
+      "reference": {
+        "thread_only": {
+          "processes": 1,
+          "threads": 8,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 1.0,
+          "throughput_gflops": 321.27350960618344,
+          "wall_seconds": 0.40607245849605533,
+          "worker_elapsed_seconds": 0.27391933299441007,
+          "throughput_samples_gflops": [
+            320.533433457551,
+            322.0135857548159
+          ],
+          "checksum": -76.05068278071352
+        },
+        "process_only": {
+          "processes": 8,
+          "threads": 1,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 1.0,
+          "throughput_gflops": 358.6623604281291,
+          "wall_seconds": 2.9104457505018217,
+          "worker_elapsed_seconds": 2.5668579582506936,
+          "throughput_samples_gflops": [
+            363.5048751871562,
+            353.819845669102
+          ],
+          "checksum": 2876.887004350721
+        },
+        "balanced_p3_t2": {
+          "processes": 3,
+          "threads": 2,
+          "size": 1536,
+          "iters_per_process": 18,
+          "oversub_ratio": 0.75,
+          "throughput_gflops": 406.54710207552694,
+          "wall_seconds": 0.9626902294985484,
+          "worker_elapsed_seconds": 0.7656300000016927,
+          "throughput_samples_gflops": [
+            406.4380686842099,
+            406.65613546684403
+          ],
+          "checksum": 533.3256885091166
+        }
+      }
+    },
+    "stream_single": [
+      {
+        "op": "copy",
+        "bytes_moved": 384000000,
+        "median_seconds": 0.004622791995643638,
+        "bandwidth_gbps": 83.06668358902337
+      },
+      {
+        "op": "scale",
+        "bytes_moved": 384000000,
+        "median_seconds": 0.011107708000054117,
+        "bandwidth_gbps": 34.5705882796099
+      },
+      {
+        "op": "add",
+        "bytes_moved": 576000000,
+        "median_seconds": 0.014360499997565057,
+        "bandwidth_gbps": 40.11002403103413
+      },
+      {
+        "op": "triad",
+        "bytes_moved": 576000000,
+        "median_seconds": 0.018703499998082407,
+        "bandwidth_gbps": 30.79637501318229
+      }
+    ],
+    "stream_scaling": [
+      {
+        "workers": 1,
+        "n_per_worker": 2000000,
+        "loops": 14,
+        "total_bandwidth_gbps": 32.29695202358936
+      },
+      {
+        "workers": 2,
+        "n_per_worker": 2000000,
+        "loops": 14,
+        "total_bandwidth_gbps": 51.69567265017802
+      },
+      {
+        "workers": 3,
+        "n_per_worker": 2000000,
+        "loops": 14,
+        "total_bandwidth_gbps": 54.09519287854022
+      },
+      {
+        "workers": 4,
+        "n_per_worker": 2000000,
+        "loops": 14,
+        "total_bandwidth_gbps": 56.61109948849206
+      },
+      {
+        "workers": 5,
+        "n_per_worker": 2000000,
+        "loops": 14,
+        "total_bandwidth_gbps": 60.8615747833782
+      },
+      {
+        "workers": 6,
+        "n_per_worker": 2000000,
+        "loops": 14,
+        "total_bandwidth_gbps": 55.20489561873542
+      },
+      {
+        "workers": 7,
+        "n_per_worker": 2000000,
+        "loops": 14,
+        "total_bandwidth_gbps": 57.244650421281946
+      },
+      {
+        "workers": 8,
+        "n_per_worker": 2000000,
+        "loops": 14,
+        "total_bandwidth_gbps": 58.55686654174185
+      }
+    ],
+    "cache_sweep": [
+      {
+        "size_bytes": 32768,
+        "reps": 2048,
+        "bandwidth_gbps": 24.277782188089372,
+        "bandwidth_samples_gbps": [
+          24.967646402262137,
+          23.339510205845738,
+          24.277782188089372
+        ],
+        "checksum": 12493836.057827547
+      },
+      {
+        "size_bytes": 65536,
+        "reps": 2048,
+        "bandwidth_gbps": 31.225523171685936,
+        "bandwidth_samples_gbps": [
+          31.295608854880314,
+          30.276951988116522,
+          31.225523171685936
+        ],
+        "checksum": 24955130.589694954
+      },
+      {
+        "size_bytes": 131072,
+        "reps": 2048,
+        "bandwidth_gbps": 35.47097301516905,
+        "bandwidth_samples_gbps": [
+          34.93433834819537,
+          35.65511077528913,
+          35.47097301516905
+        ],
+        "checksum": 49922416.86077485
+      },
+      {
+        "size_bytes": 262144,
+        "reps": 2048,
+        "bandwidth_gbps": 37.44783678882383,
+        "bandwidth_samples_gbps": [
+          36.70431109990452,
+          37.44783678882383,
+          37.523412319156705
+        ],
+        "checksum": 100435588.33094905
+      },
+      {
+        "size_bytes": 524288,
+        "reps": 2048,
+        "bandwidth_gbps": 40.68462327223417,
+        "bandwidth_samples_gbps": [
+          39.66953114335773,
+          40.839820840523046,
+          40.68462327223417
+        ],
+        "checksum": 201074138.08337128
+      },
+      {
+        "size_bytes": 1048576,
+        "reps": 1024,
+        "bandwidth_gbps": 41.344540624019395,
+        "bandwidth_samples_gbps": [
+          41.42688848009539,
+          40.22722925020742,
+          41.344540624019395
+        ],
+        "checksum": 200674420.40725678
+      },
+      {
+        "size_bytes": 2097152,
+        "reps": 512,
+        "bandwidth_gbps": 41.99519277614281,
+        "bandwidth_samples_gbps": [
+          40.03878595771134,
+          41.99519277614281,
+          42.14291760825003
+        ],
+        "checksum": 201259749.2876814
+      },
+      {
+        "size_bytes": 4194304,
+        "reps": 256,
+        "bandwidth_gbps": 42.983845111856745,
+        "bandwidth_samples_gbps": [
+          41.704717094029235,
+          42.983845111856745,
+          43.20805714494522
+        ],
+        "checksum": 201179143.8003745
+      },
+      {
+        "size_bytes": 8388608,
+        "reps": 128,
+        "bandwidth_gbps": 41.639082831669704,
+        "bandwidth_samples_gbps": [
+          21.70721218567089,
+          43.24227788467018,
+          41.639082831669704
+        ],
+        "checksum": 201277173.3303503
+      },
+      {
+        "size_bytes": 16777216,
+        "reps": 64,
+        "bandwidth_gbps": 41.11747813396527,
+        "bandwidth_samples_gbps": [
+          41.21770498941516,
+          39.458092634466205,
+          41.11747813396527
+        ],
+        "checksum": 201146511.08063504
+      },
+      {
+        "size_bytes": 33554432,
+        "reps": 32,
+        "bandwidth_gbps": 41.409383042221066,
+        "bandwidth_samples_gbps": [
+          40.13237989317366,
+          41.54423160128836,
+          41.409383042221066
+        ],
+        "checksum": 201351777.69387966
+      },
+      {
+        "size_bytes": 67108864,
+        "reps": 16,
+        "bandwidth_gbps": 38.27132223472371,
+        "bandwidth_samples_gbps": [
+          38.27132223472371,
+          37.50762817731128,
+          40.27979445612744
+        ],
+        "checksum": 201357099.7569522
+      },
+      {
+        "size_bytes": 134217728,
+        "reps": 8,
+        "bandwidth_gbps": 40.86812373302972,
+        "bandwidth_samples_gbps": [
+          40.54960968340038,
+          42.783033044974154,
+          40.86812373302972
+        ],
+        "checksum": 201345604.63694006
+      },
+      {
+        "size_bytes": 268435456,
+        "reps": 8,
+        "bandwidth_gbps": 40.842635690434435,
+        "bandwidth_samples_gbps": [
+          40.842635690434435,
+          39.13876364133991,
+          41.150734057574425
+        ],
+        "checksum": 402600374.159696
+      },
+      {
+        "size_bytes": 536870912,
+        "reps": 8,
+        "bandwidth_gbps": 40.57596213175627,
+        "bandwidth_samples_gbps": [
+          40.68650291641752,
+          40.091920843850126,
+          40.57596213175627
+        ],
+        "checksum": 805320196.6659911
+      }
+    ]
+  },
+  "derived": {
+    "cpu_throughput_per_p_core_iters_per_sec": 8034366.835401618,
+    "cpu_throughput_per_e_core_iters_per_sec": 1220214.011725396,
+    "e_core_vs_p_core_ratio": 0.15187432148962868,
+    "cpu_scaling_knee_worker": 7,
+    "memory_bandwidth_saturation_worker": 5,
+    "memory_bandwidth_peak_gbps": 60.8615747833782,
+    "matmul_peak_gflops": 488.3234986797838,
+    "triad_bandwidth_gbps": 30.79637501318229,
+    "roofline_knee_flop_per_byte": 15.856525271911337,
+    "sustained_matmul_drift_pct": -0.15464031022378588,
+    "hybrid_best_processes": 3,
+    "hybrid_best_threads": 2,
+    "hybrid_best_oversub_ratio": 0.75,
+    "hybrid_best_throughput_gflops": 406.54710207552694,
+    "hybrid_thread_only_penalty_pct": -20.97508309221736,
+    "hybrid_process_only_penalty_pct": -11.778399453085264,
+    "hybrid_balanced_penalty_pct": 0.0
+  }
+}
